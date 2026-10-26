@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Buku</title>
+</head>
+<body>
+<h1>Daftar Buku</h1>
+
+<form th:action="@{/buku}" method="get">
+    <input name="kata" th:value="${kata}" placeholder="Cari judul">
+    <button type="submit">Cari</button>
+</form>
+
+<table border="1">
+    <tr><th>ID</th><th>Judul</th><th>Stok</th></tr>
+    <tr th:each="b : ${daftarBuku}">
+        <td th:text="${b.idBuku}">B001</td>
+        <td th:text="${b.judul}">Judul buku</td>
+        <td th:text="${b.stok}">0</td>
+    </tr>
+</table>
+
+<h2>Tambah Buku</h2>
+<form th:action="@{/buku}" method="post">
+    <input name="idBuku" placeholder="ID" required>
+    <input name="judul" placeholder="Judul" required>
+    <input name="stok" type="number" min="0" value="1">
+    <button type="submit">Simpan</button>
+</form>
+</body>
+</html>
