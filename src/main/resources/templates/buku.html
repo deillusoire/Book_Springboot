@@ -2,31 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daftar Buku</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Daftar Buku</h1>
+<nav class="navbar">
+    <span class="brand">Perpustakaan</span>
+    <a th:href="@{/buku}" class="active">Buku</a>
+    <a th:href="@{/anggota}">Anggota</a>
+    <a th:href="@{/peminjaman}">Peminjaman</a>
+</nav>
 
-<form th:action="@{/buku}" method="get">
-    <input name="kata" th:value="${kata}" placeholder="Cari judul">
-    <button type="submit">Cari</button>
-</form>
+<div class="container">
+    <h1>Daftar Buku</h1>
 
-<table border="1">
-    <tr><th>ID</th><th>Judul</th><th>Stok</th></tr>
-    <tr th:each="b : ${daftarBuku}">
-        <td th:text="${b.idBuku}">B001</td>
-        <td th:text="${b.judul}">Judul buku</td>
-        <td th:text="${b.stok}">0</td>
-    </tr>
-</table>
+    <p class="pesan pesan-error" th:if="${error}" th:text="${error}"></p>
+    <p class="pesan pesan-sukses" th:if="${sukses}" th:text="${sukses}"></p>
 
-<h2>Tambah Buku</h2>
-<form th:action="@{/buku}" method="post">
-    <input name="idBuku" placeholder="ID" required>
-    <input name="judul" placeholder="Judul" required>
-    <input name="stok" type="number" min="0" value="1">
-    <button type="submit">Simpan</button>
-</form>
+    <div class="card">
+        <form class="form-baris" th:action="@{/buku}" method="get">
+            <input name="kata" th:value="${kata}" placeholder="Cari judul">
+            <button type="submit">Cari</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <p class="kosong" th:if="${#lists.isEmpty(daftarBuku)}">Belum ada buku.</p>
+        <div class="tabel-bungkus" th:unless="${#lists.isEmpty(daftarBuku)}">
+            <table>
+                <tr><th>ID</th><th>Judul</th><th>Stok</th></tr>
+                <tr th:each="b : ${daftarBuku}">
+                    <td th:text="${b.idBuku}">B001</td>
+                    <td th:text="${b.judul}">Judul buku</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${b.stok == 0} ? 'badge-merah' : 'badge-hijau'"
+                              th:text="${b.stok == 0} ? 'Habis' : ${b.stok}">3</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Tambah Buku</h2>
+        <form class="form-baris" th:action="@{/buku}" method="post">
+            <input name="idBuku" placeholder="ID" required>
+            <input name="judul" placeholder="Judul" required>
+            <input name="stok" type="number" min="0" value="1">
+            <button type="submit">Simpan</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

@@ -1,62 +1,48 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daftar Anggota</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<nav class="navbar">
+    <span class="brand">Perpustakaan</span>
+    <a th:href="@{/buku}">Buku</a>
+    <a th:href="@{/anggota}" class="active">Anggota</a>
+    <a th:href="@{/peminjaman}">Peminjaman</a>
+</nav>
+
+<div class="container">
     <h1>Daftar Anggota</h1>
 
-    <table border="1" th:unless="${#lists.isEmpty(daftarAnggota)}">
-        <tr>
-            <th>ID Anggota</th>
-            <th>Nama</th>
-            <th>Batas Pinjam</th>
-        </tr>
+    <p class="pesan pesan-error" th:if="${error}" th:text="${error}"></p>
+    <p class="pesan pesan-sukses" th:if="${sukses}" th:text="${sukses}"></p>
 
-        <tr th:each="a : ${daftarAnggota}">
-            <td th:text="${a.idAnggota}">A001</td>
-            <td th:text="${a.nama}">Nama Anggota</td>
-            <td th:text="${a.batasPinjam}">0</td>
-        </tr>
-    </table>
+    <div class="card">
+        <p class="kosong" th:if="${#lists.isEmpty(daftarAnggota)}">Belum ada anggota.</p>
+        <div class="tabel-bungkus" th:unless="${#lists.isEmpty(daftarAnggota)}">
+            <table>
+                <tr><th>ID Anggota</th><th>Nama</th><th>Batas Pinjam</th></tr>
+                <tr th:each="a : ${daftarAnggota}">
+                    <td th:text="${a.idAnggota}">A001</td>
+                    <td th:text="${a.nama}">Nama Anggota</td>
+                    <td th:text="${a.batasPinjam}">0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    <p th:if="${#lists.isEmpty(daftarAnggota)}">
-        Belum ada anggota.
-    </p>
-
-    <br>
-
-    <h2>Tambah Anggota</h2>
-
-    <form th:action="@{/anggota/tambah}" method="post">
-        <input
-            type="text"
-            name="idAnggota"
-            placeholder="ID Anggota"
-            required
-        >
-
-        <input
-            type="text"
-            name="nama"
-            placeholder="Nama Anggota"
-            required
-        >
-
-        <input
-            type="number"
-            name="batasPinjam"
-            placeholder="Batas Pinjam"
-            min="0"
-            required
-        >
-
-        <button type="submit">Tambah</button>
-    </form>
-
-    <br>
-    <a th:href="@{/buku}">Kembali ke Daftar Buku</a>
+    <div class="card">
+        <h2>Tambah Anggota</h2>
+        <form class="form-baris" th:action="@{/anggota/tambah}" method="post">
+            <input type="text" name="idAnggota" placeholder="ID Anggota" required>
+            <input type="text" name="nama" placeholder="Nama Anggota" required>
+            <input type="number" name="batasPinjam" placeholder="Batas Pinjam" min="0" required>
+            <button type="submit">Tambah</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

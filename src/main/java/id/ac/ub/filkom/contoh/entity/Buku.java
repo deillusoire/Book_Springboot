@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import id.ac.ub.filkom.contoh.exception.AturanBisnisException;
 
 /** Entity: objek data yang dipetakan ke tabel "buku". */
 @Entity
@@ -31,4 +32,11 @@ public class Buku {
     public String getIdBuku() { return idBuku; }
     public String getJudul()  { return judul; }
     public int getStok()      { return stok; }
+
+    public void kurangiStok() {
+        if (stok <= 0) {
+            throw new AturanBisnisException("Stok buku \"" + judul + "\" habis");
+        } stok--; }
+
+        public void tambahStok() { stok++; }
 }
