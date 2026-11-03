@@ -6,6 +6,8 @@
 </head>
 <body>
 <h1>Daftar Buku</h1>
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+<p th:if="${sukses}" th:text="${sukses}" style="color:green"></p>
 
 <form th:action="@{/buku}" method="get">
     <input name="kata" th:value="${kata}" placeholder="Cari judul">
@@ -28,5 +30,8 @@
     <input name="stok" type="number" min="0" value="1">
     <button type="submit">Simpan</button>
 </form>
+
+<br>
+    <a th:href="@{/anggota}">Kembali ke Daftar Anggota</a>
 </body>
 </html>

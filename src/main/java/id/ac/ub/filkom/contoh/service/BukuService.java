@@ -3,6 +3,7 @@ package id.ac.ub.filkom.contoh.service;
 import id.ac.ub.filkom.contoh.entity.Buku;
 import id.ac.ub.filkom.contoh.repository.BukuRepository;
 import org.springframework.stereotype.Service;
+import id.ac.ub.filkom.contoh.exception.AturanBisnisException;
 
 import java.util.List;
 
@@ -25,9 +26,18 @@ public class BukuService {
     }
 
     public Buku tambahBuku(String idBuku, String judul, int stok) {
-        if (stok < 0) {
-            throw new IllegalArgumentException("Stok tidak boleh negatif");
+        String id = idBuku == null ? "" : idBuku.trim();
+        String namaJudul = judul == null ? "" : judul.trim();
+
+        if (id.isEmpty() || namaJudul.isEmpty()) {
+            throw new AturanBisnisException("ID dan judul buku tidak boleh kosong");
         }
-        return bukuRepository.save(new Buku(idBuku, judul, stok));
+        if (stok < 0) {
+            throw new AturanBisnisException("Stok tidak boleh negatif");
+        }
+        if (bukuRepository.existsById(id)) {
+            throw new AturanBisnisException("ID buku " + id + " sudah dipakai");
+        }
+        return bukuRepository.save(new Buku(id, namaJudul, stok));
     }
 }
