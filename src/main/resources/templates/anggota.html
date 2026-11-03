@@ -9,6 +9,11 @@
     <h1>Daftar Anggota</h1>
     <p th:if="${error}" th:text="${error}" style="color:red"></p>
     <p th:if="${sukses}" th:text="${sukses}" style="color:green"></p>
+    <p>
+        <a th:href="@{/buku}">Buku</a> |
+        <a th:href="@{/anggota}">Anggota</a> |
+        <a th:href="@{/peminjaman}">Peminjaman</a>
+    </p>
 
     <table border="1" th:unless="${#lists.isEmpty(daftarAnggota)}">
         <tr>

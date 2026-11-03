@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Peminjaman Buku</title>
+</head>
+<body>
+<h1>Peminjaman Buku</h1>
+
+<p>
+    <a th:href="@{/buku}">Buku</a> |
+    <a th:href="@{/anggota}">Anggota</a> |
+    <a th:href="@{/peminjaman}">Peminjaman</a>
+</p>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+<p th:if="${sukses}" th:text="${sukses}" style="color:green"></p>
+
+<h2>Pinjam Buku</h2>
+<form th:action="@{/peminjaman/pinjam}" method="post">
+    <select name="idAnggota" required>
+        <option value="">-- Pilih anggota --</option>
+        <option th:each="a : ${daftarAnggota}"
+                th:value="${a.idAnggota}"
+                th:text="${a.idAnggota + ' - ' + a.nama + ' (batas ' + a.batasPinjam + ')'}">
+        </option>
+    </select>
+
+    <select name="idBuku" required>
+        <option value="">-- Pilih buku --</option>
+        <option th:each="b : ${daftarBuku}"
+                th:value="${b.idBuku}"
+                th:disabled="${b.stok == 0}"
+                th:text="${b.idBuku + ' - ' + b.judul + ' (stok ' + b.stok + ')'}">
+        </option>
+    </select>
+
+    <button type="submit">Pinjam</button>
+</form>
+
+<h2>Sedang Dipinjam</h2>
+<p th:if="${#lists.isEmpty(daftarAktif)}">Tidak ada peminjaman aktif.</p>
+<table border="1" th:unless="${#lists.isEmpty(daftarAktif)}">
+    <tr>
+        <th>Anggota</th><th>Buku</th><th>Tgl Pinjam</th>
+        <th>Jatuh Tempo</th><th>Keterangan</th><th>Aksi</th>
+    </tr>
+    <tr th:each="p : ${daftarAktif}">
+        <td th:text="${p.anggota.nama}">Nama</td>
+        <td th:text="${p.buku.judul}">Judul</td>
+        <td th:text="${#temporals.format(p.tglPinjam, 'dd-MM-yyyy')}">01-01-2026</td>
+        <td th:text="${#temporals.format(p.tglJatuhTempo, 'dd-MM-yyyy')}">08-01-2026</td>
+        <td>
+            <span th:if="${p.terlambat}" style="color:red">Terlambat</span>
+            <span th:unless="${p.terlambat}">Tepat waktu</span>
+        </td>
+        <td>
+            <form th:action="@{/peminjaman/{id}/kembali(id=${p.id})}" method="post">
+                <button type="submit">Kembalikan</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h2>Riwayat</h2>
+<p th:if="${#lists.isEmpty(riwayat)}">Belum ada riwayat.</p>
+<table border="1" th:unless="${#lists.isEmpty(riwayat)}">
+    <tr>
+        <th>Anggota</th><th>Buku</th><th>Tgl Pinjam</th>
+        <th>Tgl Kembali</th><th>Status</th>
+    </tr>
+    <tr th:each="p : ${riwayat}">
+        <td th:text="${p.anggota.nama}">Nama</td>
+        <td th:text="${p.buku.judul}">Judul</td>
+        <td th:text="${#temporals.format(p.tglPinjam, 'dd-MM-yyyy')}">01-01-2026</td>
+        <td th:text="${p.tglKembali != null} ? ${#temporals.format(p.tglKembali, 'dd-MM-yyyy')} : '-'">-</td>
+        <td th:text="${p.status}">DIPINJAM</td>
+    </tr>
+</table>
+</body>
+</html>
